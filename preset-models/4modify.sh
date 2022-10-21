@@ -2,10 +2,14 @@
 #修改登录IP
 sed -i 's/192.168.1.1/192.168.2.1/g' package/base-files/files/bin/config_generate
 #修改主机名
-sed -i 's/OpenWrt/Phicomm-Router/g' package/base-files/files/bin/config_generate
+#sed -i 's/OpenWrt/Phicomm-Router/g' package/base-files/files/bin/config_generate
 #删除自带低版本xray-core
 rm -rf feeds/packages/net/xray-core
 rm -rf package/feeds/packages/xray-core
+#优化smartdns配置
+rm -rf feeds/packages/net/smartdns
+rm -rf package/feeds/packages/net/smartdns
+cp -rf extra-files/smartdns feeds/packages/net
 #复制uci-defaults脚本 
 mkdir -p files/etc/uci-defaults
 cp -f uci-scripts/* files/etc/uci-defaults
@@ -17,8 +21,6 @@ cp -f uci-scripts/* files/etc/uci-defaults
 #sed -i '/encryption/a\set wireless.default_radio${devidx}.key=coolphicomm' package/kernel/mac80211/files/lib/wifi/mac80211.sh
 #切换ramips内核到5.15
 #sed -i '/KERNEL_PATCHVER/cKERNEL_PATCHVER:=5.15' target/linux/ramips/Makefile
-
 #删除一些zzz中的脚本
-sed -i '/DISTRIB_/d' package/default-settings/files/zzz-default-settings
-sed -i '/footer.htm/d' package/default-settings/files/zzz-default-settings
-sed -i '/admin_status/d' package/default-settings/files/zzz-default-settings
+ZZZ_SCRIPT="package/default-settings/files/zzz-default-settings"
+[ -e $ZZZ_SCRIPT ] && sed -i -e '/DISTRIB_/d' -e '/footer.htm/d' -e '/admin_status/d' $ZZZ_SCRIPT
